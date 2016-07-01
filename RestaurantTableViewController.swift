@@ -53,6 +53,7 @@ class RestaurantTableViewController: UITableViewController, NSFetchedResultsCont
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         //notging to change just test 
+        //in the master change
     }
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
