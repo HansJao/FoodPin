@@ -9,8 +9,11 @@
 import UIKit
 import CoreData
 
-class RestaurantTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class RestaurantTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating{
     var restaurants:[Restaurant] = []
+    
+    var searchController:UISearchController!
+    var searchResults:[Restaurant] = []
     
     var fetchResultController:NSFetchedResultsController!
     
@@ -41,6 +44,27 @@ class RestaurantTableViewController: UITableViewController, NSFetchedResultsCont
                 print(error)
             }
         }
+        
+        searchController = UISearchController(searchResultsController:nil)
+        tableView.tableHeaderView = searchController.searchBar
+    }
+    
+    // MARK: - Search
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            filterContentForSearchText(searchText)
+            tableView.reloadData()
+        }
+    }
+    
+    func filterContentForSearchText(searchText: String) {
+        searchResults = restaurants.filter({ (restaurant:Restaurant) -> Bool in
+            let nameMatch = restaurant.name.rangeOfString(searchText, options: NSStringCompareOptions.CaseInsensitiveSearch)
+            let locationMatch = restaurant.location.rangeOfString(searchText, options: NSStringCompareOptions.CaseInsensitiveSearch)
+            
+            return nameMatch != nil || locationMatch != nil
+        })
     }
 
     override func viewWillAppear(animated: Bool) {
